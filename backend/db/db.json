@@ -1,0 +1,151 @@
+{
+  "users": [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Diana",
+    "Eve"
+  ],
+  "chats": [
+    {
+      "sender": "Alice",
+      "message": "Hey everyone",
+      "createdAt": 1735718400000
+    },
+    {
+      "sender": "Bob",
+      "message": "Morning!",
+      "createdAt": 1735718460000
+    },
+    {
+      "sender": "Charlie",
+      "message": "Good morning team",
+      "createdAt": 1735718520000
+    },
+    {
+      "sender": "Diana",
+      "message": "Any updates?",
+      "createdAt": 1735718580000
+    },
+    {
+      "sender": "Eve",
+      "message": "Working on the API",
+      "createdAt": 1735718640000
+    },
+    {
+      "sender": "Alice",
+      "message": "How long will it take?",
+      "createdAt": 1735718700000
+    },
+    {
+      "sender": "Eve",
+      "message": "About an hour",
+      "createdAt": 1735718760000
+    },
+    {
+      "sender": "Bob",
+      "message": "UI is ready from my side",
+      "createdAt": 1735718820000
+    },
+    {
+      "sender": "Charlie",
+      "message": "Great work",
+      "createdAt": 1735718880000
+    },
+    {
+      "sender": "Diana",
+      "message": "We should test edge cases",
+      "createdAt": 1735718940000
+    },
+    {
+      "sender": "Alice",
+      "message": "Agreed",
+      "createdAt": 1735719000000
+    },
+    {
+      "sender": "Bob",
+      "message": "I’ll add more validations",
+      "createdAt": 1735719060000
+    },
+    {
+      "sender": "Charlie",
+      "message": "Any blockers?",
+      "createdAt": 1735719120000
+    },
+    {
+      "sender": "Eve",
+      "message": "None so far",
+      "createdAt": 1735719180000
+    },
+    {
+      "sender": "Diana",
+      "message": "Database looks stable",
+      "createdAt": 1735719240000
+    },
+    {
+      "sender": "Alice",
+      "message": "Let’s deploy today",
+      "createdAt": 1735719300000
+    },
+    {
+      "sender": "Bob",
+      "message": "After tests pass",
+      "createdAt": 1735719360000
+    },
+    {
+      "sender": "Charlie",
+      "message": "Makes sense",
+      "createdAt": 1735719420000
+    },
+    {
+      "sender": "Eve",
+      "message": "API is ready now",
+      "createdAt": 1735719480000
+    },
+    {
+      "sender": "Diana",
+      "message": "Starting tests",
+      "createdAt": 1735719540000
+    },
+    {
+      "sender": "Alice",
+      "message": "Ping once done",
+      "createdAt": 1735719600000
+    },
+    {
+      "sender": "Bob",
+      "message": "All green on UI",
+      "createdAt": 1735719660000
+    },
+    {
+      "sender": "Charlie",
+      "message": "Looks good overall",
+      "createdAt": 1735719720000
+    },
+    {
+      "sender": "Diana",
+      "message": "Tests passed",
+      "createdAt": 1735719780000
+    },
+    {
+      "sender": "Alice",
+      "message": "Deploying",
+      "createdAt": 1735719840000
+    },
+    {
+      "message": "bright",
+      "sender": "test-username",
+      "createdAt": 1767125114022
+    },
+    {
+      "message": "this is a",
+      "sender": "bright",
+      "createdAt": 1767125343880
+    },
+    {
+      "message": "very bright ",
+      "sender": "bright",
+      "createdAt": 1767125349161
+    }
+  ]
+}
