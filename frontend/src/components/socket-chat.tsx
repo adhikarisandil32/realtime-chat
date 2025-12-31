@@ -1,7 +1,8 @@
-import { envConfig } from "@/config/config";
+import { useSocket } from "@/providers/socket-provider";
 import { clearLocal } from "@/utils/local-storage";
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { io } from "socket.io-client";
+import ClientCount from "./client-counts";
+import { useChats } from "@/services/api/chats";
 
 interface SocketConnectionProps {
   username: string;
@@ -13,13 +14,12 @@ interface IConversation {
   createdAt: string;
 }
 
-const socket = io(envConfig.apiUrl);
-
 function SocketChat({ username }: SocketConnectionProps) {
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
   const latestConversationRef = useRef<HTMLDivElement | null>(null);
   const [conversations, setConversations] = useState<IConversation[]>([]);
-  const [connectedClient, setConnectedClients] = useState<number>(0);
+
+  const { socket, connectedClients } = useSocket();
 
   useEffect(() => {
     latestConversationRef.current?.scrollIntoView({
@@ -33,14 +33,10 @@ function SocketChat({ username }: SocketConnectionProps) {
       setConversations((prev) => [...prev, data]);
     };
 
-    const countListener = (count: number) => setConnectedClients(count);
-
-    socket.on("client-count", countListener);
     socket.on("message", messageListener);
 
     return () => {
       socket.off("message", messageListener);
-      socket.off("client-count", countListener);
     };
   }, []);
 
@@ -51,7 +47,7 @@ function SocketChat({ username }: SocketConnectionProps) {
 
     const message = inputMessageRef.current.value;
 
-    socket.emit("message", { sender: username, message });
+    socket?.emit("message", { sender: username, message });
     inputMessageRef.current.value = "";
   };
 
@@ -59,14 +55,15 @@ function SocketChat({ username }: SocketConnectionProps) {
     <div className="flex h-screen justify-center items-center">
       <div className="space-y-4 w-80 relative">
         <div className="border-2 border-black h-90 overflow-auto w-full">
-          <h2 className="text-center font-bold bg-gray-100 sticky top-0">
-            Conversation Box ({connectedClient}{" "}
-            {`${connectedClient > 1 ? "Users" : "User"}`})
-          </h2>
+          <ClientCount
+            className="text-center font-bold bg-gray-100 sticky top-0"
+            connectedClientsCount={connectedClients}
+          />
+
           <div className="my-1 px-2 space-y-1 grid grid-cols-6">
             {conversations.map((conversation, idx, initialArr) => (
               <div
-                key={`${conversation.sender}-${conversation.message}`}
+                key={`${conversation.sender}-${conversation.createdAt}`}
                 className={`px-2 py-1 rounded-lg ${
                   conversation.sender === username
                     ? "bg-blue-800 text-gray-100 col-start-2 col-end-7"
@@ -76,7 +73,9 @@ function SocketChat({ username }: SocketConnectionProps) {
                   idx + 1 === initialArr.length ? latestConversationRef : null
                 }
               >
-                <p className="font-semibold">{conversation.sender}: </p>
+                <p className="font-semibold truncate">
+                  {conversation.sender}:{" "}
+                </p>
                 <p>{conversation.message}</p>
               </div>
             ))}
@@ -105,6 +104,7 @@ function SocketChat({ username }: SocketConnectionProps) {
               type="button"
               className="text-gray-100 bg-red-600 rounded-sm px-4 w-fit"
               onClick={() => {
+                socket?.disconnect();
                 clearLocal();
                 window.location.reload();
               }}
