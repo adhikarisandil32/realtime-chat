@@ -9,13 +9,18 @@ const AskUser = dynamic(() => import("@/components/ask-user"), {
 const SocketChat = dynamic(() => import("@/components/socket-chat"), {
   ssr: false,
 });
+const SocketProvider = dynamic(() => import("@/providers/socket-provider"));
 
 export default function Home() {
   const username = getLocal("username");
 
-  if (username) {
-    return <SocketChat username={username} />;
-  } else {
+  if (!username) {
     return <AskUser />;
+  } else {
+    return (
+      <SocketProvider>
+        <SocketChat username={username} />
+      </SocketProvider>
+    );
   }
 }
