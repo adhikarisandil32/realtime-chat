@@ -7,7 +7,6 @@ export const useChats = <T = any>(config?: AxiosRequestConfig) => {
   return useSuspenseQuery<T>({
     queryKey: [queryKeys.chats],
     queryFn: async () => {
-      // return await api.get("/products", config);
       return await new Promise((resolve, reject) => {
         setTimeout(async () => {
           try {
