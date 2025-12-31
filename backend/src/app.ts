@@ -20,7 +20,6 @@ app.get("/api/chats", async (req, res) => {
     const limit = isNaN(Number(req.query.limit)) ? 10 : Number(req.query.limit);
     const page = isNaN(Number(req.query.page)) ? 1 : Number(req.query.page);
 
-    const start = (page - 1) * limit;
     const pagination = {
       total: db.data.chats.length,
       limit: limit < 10 ? 10 : limit,
@@ -36,13 +35,16 @@ app.get("/api/chats", async (req, res) => {
       },
     };
 
+    const end = pagination.total - (pagination.page - 1) * pagination.limit;
+    const start = end - limit < 0 ? 0 : end - limit;
+
     res.status(200).json({
       statusCode: 200,
       success: true,
       message: "fetch success",
       data: db.data.chats
-        .sort((a, b) => b.createdAt - a.createdAt)
-        .slice(start, start + limit),
+        .sort((a, b) => a.createdAt - b.createdAt)
+        .slice(start, end),
       pagination,
     });
   } catch (error) {
