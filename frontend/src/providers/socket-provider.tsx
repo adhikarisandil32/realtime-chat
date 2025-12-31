@@ -3,12 +3,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 
-interface ISocketContext {
+interface ISocketProviderContext {
   socket: Socket;
   connectedClients: number;
 }
 
-const SocketContext = React.createContext<ISocketContext | undefined>(
+const SocketContext = React.createContext<ISocketProviderContext | undefined>(
   undefined
 );
 
@@ -23,7 +23,13 @@ export const useSocket = () => {
 };
 
 const socket = io(envConfig.apiUrl, { autoConnect: false });
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 export default function SocketProvider({
   children,
