@@ -19,7 +19,7 @@ const updateUserCount = () => {
 };
 
 io.on("connection", (socket) => {
-  console.log(`Socket connection successful with id: ${socket.id}`);
+  console.log(`[connected] SocketID: ${socket.id}`);
   updateUserCount();
 
   // socket.on("message", (message) => {
@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
 
   socket.on("connect", updateUserCount);
   socket.on("disconnect", (reason) => {
-    console.log(reason);
+    console.log(`[disconnected] ${reason}`);
     updateUserCount();
   });
 
