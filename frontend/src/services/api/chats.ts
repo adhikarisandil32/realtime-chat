@@ -1,22 +1,50 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useSuspenseInfiniteQuery,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { AxiosRequestConfig } from "axios";
 import { api } from "../axios-instance";
 import { queryKeys } from "@/utils/react-query-keys";
+import { IPaginatedResponse } from "@/types/paginaed-response";
+import { IChatResponse } from "@/types/chat-response";
 
-export const useChats = <T = any>(config?: AxiosRequestConfig) => {
-  return useSuspenseQuery<T>({
+export const useChats = (config?: AxiosRequestConfig) => {
+  return useSuspenseQuery<IPaginatedResponse<IChatResponse>>({
     queryKey: [queryKeys.chats],
     queryFn: async () => {
       return await new Promise((resolve, reject) => {
         setTimeout(async () => {
           try {
             const response = await api.get("/api/chats", config);
-            resolve(response as T);
+            resolve(response.data);
           } catch (error) {
             reject(error);
           }
-        }, 10 * 1000);
+        }, 1 * 1000);
       });
+    },
+  });
+};
+
+export const useInfiniteChats = (config?: AxiosRequestConfig) => {
+  return useSuspenseInfiniteQuery<IPaginatedResponse<IChatResponse>>({
+    initialPageParam: config?.params.page ?? 1,
+    getNextPageParam: ({ pagination }) => pagination.nextPage ?? null,
+    getPreviousPageParam: ({ pagination }) => pagination.prevPage ?? null,
+    queryKey: [queryKeys.chats],
+    queryFn: async ({ pageParam }) => {
+      try {
+        const response = await api.get("/api/chats", {
+          ...config,
+          params: {
+            ...config?.params,
+            page: pageParam,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        throw error;
+      }
     },
   });
 };
