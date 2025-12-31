@@ -24,9 +24,9 @@ export default function AskUser() {
           ref={usernameRef}
           type="text"
           placeholder="enter your username"
-          className="border border-black rounded-sm w-full px-1"
+          className="border border-black rounded-sm w-full py-1 px-2"
         />
-        <button className="border border-black rounded-sm px-4 w-fit">
+        <button className="border border-muted-foreground rounded-sm px-4 w-full cursor-pointer">
           Set
         </button>
       </form>
