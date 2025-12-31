@@ -19,7 +19,7 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (response) => {
-    return response.data;
+    return response;
   },
   async (error: IAxiosError) => {
     const prevConfig = error.config;
