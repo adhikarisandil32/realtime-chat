@@ -1,63 +1,66 @@
 import { useSocket } from "@/providers/socket-provider";
-import { clearLocal } from "@/utils/local-storage";
-import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import ClientCount from "./client-counts";
-import { LoaderCircle } from "lucide-react";
 import ChatHistoryBox from "./chat-history-box";
-import Loading from "./loading-animation";
+import { useProtected } from "../providers/protected";
+import { IClientChat } from "@/types/chat-response";
+import TypingIndicator from "./typing-indictor";
 
-interface SocketConnectionProps {
-  username: string;
-}
+function SocketChat() {
+  // React.useEffect(() => {
+  //   console.log("socket chat mounted");
 
-interface IConversation {
-  sender: string;
-  message: string;
-  createdAt: string;
-}
+  //   return () => console.log("socket chat unmounted");
+  // });
 
-function SocketChat({ username }: SocketConnectionProps) {
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
-  const [conversations, setConversations] = useState<IConversation[]>([]);
 
-  const { socket, connectedClients } = useSocket();
-
-  useEffect(() => {
-    const messageListener = (data: IConversation) => {
-      setConversations((prev) => [...prev, data]);
-    };
-
-    socket.on("message", messageListener);
-
-    return () => {
-      socket.off("message", messageListener);
-    };
-  }, []);
+  const { socket, emitMessage, setMessages } = useSocket();
+  const { username, logout } = useProtected();
 
   const handleSend = (e: FormEvent) => {
     e.preventDefault();
-
     if (!inputMessageRef.current?.value.trim()) return;
 
-    const message = inputMessageRef.current.value;
+    const message = inputMessageRef.current.value.trim();
+    const messageData: IClientChat = {
+      sender: username,
+      message,
+      createdAt: new Date().getTime(),
+      status: "pending",
+      identifier: crypto.randomUUID(),
+    };
+    emitMessage(messageData);
+    setMessages((prev) => [...prev, messageData]);
 
-    socket.emit("message", { sender: username, message });
     inputMessageRef.current.value = "";
+  };
+
+  const handleTyping = () => {
+    let timeout: ReturnType<typeof setTimeout>;
+
+    return () => {
+      socket.emit("typing-on", { user: username });
+      clearTimeout(timeout);
+
+      timeout = setTimeout(
+        () => socket.emit("typing-off", { user: username }),
+        2 * 1000
+      );
+    };
   };
 
   return (
     <div className="flex h-screen justify-center items-center">
-      <div className="space-y-4 w-80 relative">
-        <div className="border-2 border-black h-90 overflow-auto w-full">
-          <ClientCount
-            className="text-center font-bold bg-gray-100 sticky top-0"
-            connectedClientsCount={connectedClients}
-          />
+      <div className="space-y-4 w-96 relative">
+        <div className="border-2 border-black h-125 overflow-auto w-full">
+          <div className="sticky top-0 bg-gray-100">
+            <ClientCount className="text-center font-bold " />
+            <TypingIndicator className="py-1 text-sm text-muted-foreground text-center" />
+          </div>
 
           <div className="my-1 px-2 space-y-1 grid grid-cols-6">
-            <Suspense fallback={<Loading />}>
-              <ChatHistoryBox username={username} />
-            </Suspense>
+            <ChatHistoryBox username={username} />
           </div>
         </div>
 
@@ -67,6 +70,7 @@ function SocketChat({ username }: SocketConnectionProps) {
         >
           <input
             ref={inputMessageRef}
+            onKeyDown={handleTyping()}
             type="text"
             placeholder="Enter message"
             className="border border-black rounded-sm w-full py-1 px-2"
@@ -77,8 +81,7 @@ function SocketChat({ username }: SocketConnectionProps) {
               className="text-gray-100 bg-red-600 rounded-sm px-4 w-fit"
               onClick={() => {
                 socket.disconnect();
-                clearLocal();
-                window.location.reload();
+                logout();
               }}
             >
               Exit
