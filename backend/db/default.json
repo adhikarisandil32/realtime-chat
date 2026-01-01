@@ -2,109 +2,214 @@
   "users": ["Alice", "Bob", "Charlie", "Diana", "Eve"],
   "chats": [
     {
+      "id": "6a7d3d5a-8e6a-4d89-bb3f-3c9f8c1e1c01",
       "sender": "Alice",
       "message": "Hey everyone",
-      "createdAt": 1735718400000
+      "createdAt": 1735718400000,
+      "status": "sent"
     },
-    { "sender": "Bob", "message": "Morning!", "createdAt": 1735718460000 },
     {
+      "id": "b2c1a4c3-2c3f-4c0b-9a1e-6d4f7f0d2c12",
+      "sender": "Bob",
+      "message": "Morning!",
+      "createdAt": 1735718460000,
+      "status": "sent"
+    },
+    {
+      "id": "f1a0d9e2-5c9a-4f0c-8b62-1e9c3b7e0a33",
       "sender": "Charlie",
       "message": "Good morning team",
-      "createdAt": 1735718520000
+      "createdAt": 1735718520000,
+      "status": "sent"
     },
     {
+      "id": "9c7e6a2b-4f3d-4e8a-9d5a-2f7c1e8b6a44",
       "sender": "Diana",
       "message": "Any updates?",
-      "createdAt": 1735718580000
+      "createdAt": 1735718580000,
+      "status": "sent"
     },
     {
+      "id": "0a3f2c7b-6e5d-4f1a-8c9e-b4d6e1f2a555",
       "sender": "Eve",
       "message": "Working on the API",
-      "createdAt": 1735718640000
+      "createdAt": 1735718640000,
+      "status": "sent"
     },
     {
+      "id": "8e4d7f2c-1a9b-4c6e-b0f3-9d2a6c1e6666",
       "sender": "Alice",
       "message": "How long will it take?",
-      "createdAt": 1735718700000
+      "createdAt": 1735718700000,
+      "status": "sent"
     },
-    { "sender": "Eve", "message": "About an hour", "createdAt": 1735718760000 },
     {
+      "id": "3b6f2a9e-5c4d-4f8b-a1e0-7d6c2f5a7777",
+      "sender": "Eve",
+      "message": "About an hour",
+      "createdAt": 1735718760000,
+      "status": "sent"
+    },
+    {
+      "id": "d1f9a6b2-7e4c-4a8d-9c5f-0b2e6a3c8888",
       "sender": "Bob",
       "message": "UI is ready from my side",
-      "createdAt": 1735718820000
+      "createdAt": 1735718820000,
+      "status": "sent"
     },
     {
+      "id": "5c7e9a0b-6d2f-4b8c-9a1e-f3d2c6b59999",
       "sender": "Charlie",
       "message": "Great work",
-      "createdAt": 1735718880000
+      "createdAt": 1735718880000,
+      "status": "sent"
     },
     {
+      "id": "a8c6d3f2-1b9e-4a5c-8d7f-2e6b0c1a0000",
       "sender": "Diana",
       "message": "We should test edge cases",
-      "createdAt": 1735718940000
+      "createdAt": 1735718940000,
+      "status": "sent"
     },
-    { "sender": "Alice", "message": "Agreed", "createdAt": 1735719000000 },
     {
+      "id": "e2a1c7d6-4f9b-4a8e-b3d5-6c0f2a1b1111",
+      "sender": "Alice",
+      "message": "Agreed",
+      "createdAt": 1735719000000,
+      "status": "sent"
+    },
+    {
+      "id": "7f2d6a9c-5b4e-4f1a-8c3d-e9b6a2c12222",
       "sender": "Bob",
       "message": "I’ll add more validations",
-      "createdAt": 1735719060000
+      "createdAt": 1735719060000,
+      "status": "sent"
     },
     {
+      "id": "4b0a9e7c-6d5f-4c2a-9b8e-1d3f6a2c3333",
       "sender": "Charlie",
       "message": "Any blockers?",
-      "createdAt": 1735719120000
+      "createdAt": 1735719120000,
+      "status": "sent"
     },
-    { "sender": "Eve", "message": "None so far", "createdAt": 1735719180000 },
     {
+      "id": "9a6f3e2c-8d4b-4a5c-b1f0-7c2e6d9a4444",
+      "sender": "Eve",
+      "message": "None so far",
+      "createdAt": 1735719180000,
+      "status": "sent"
+    },
+    {
+      "id": "2e7a6c9d-1f4b-4c8a-b5d3-0e6f2a9c5555",
       "sender": "Diana",
       "message": "Database looks stable",
-      "createdAt": 1735719240000
+      "createdAt": 1735719240000,
+      "status": "sent"
     },
     {
+      "id": "c3f1e9a2-6d5b-4a8c-9e7f-2a0d6b1c6666",
       "sender": "Alice",
       "message": "Let’s deploy today",
-      "createdAt": 1735719300000
+      "createdAt": 1735719300000,
+      "status": "sent"
     },
     {
+      "id": "a5c6b7d8-9e4f-4a1c-8d2e-f6b3a0c77777",
       "sender": "Bob",
       "message": "After tests pass",
-      "createdAt": 1735719360000
+      "createdAt": 1735719360000,
+      "status": "sent"
     },
     {
+      "id": "0d6c7a2e-9b5f-4a8c-b1d3-e6f2c9a88888",
       "sender": "Charlie",
       "message": "Makes sense",
-      "createdAt": 1735719420000
+      "createdAt": 1735719420000,
+      "status": "sent"
     },
     {
+      "id": "b9a6e2d3-5f4c-4a1e-8c7d-0f6a2c9b9999",
       "sender": "Eve",
       "message": "API is ready now",
-      "createdAt": 1735719480000
+      "createdAt": 1735719480000,
+      "status": "sent"
     },
     {
+      "id": "1f2a6c9d-7b5e-4a8c-9d3e-f0b6a2c00000",
       "sender": "Diana",
       "message": "Starting tests",
-      "createdAt": 1735719540000
+      "createdAt": 1735719540000,
+      "status": "sent"
     },
     {
+      "id": "6c9a2f7e-5d4b-4a8c-b1e0-f3d2a6c11111",
       "sender": "Alice",
       "message": "Ping once done",
-      "createdAt": 1735719600000
+      "createdAt": 1735719600000,
+      "status": "sent"
     },
     {
+      "id": "e3b2a9d6-4f5c-4a8e-b7d1-0c6f2a9b22222",
       "sender": "Bob",
       "message": "All green on UI",
-      "createdAt": 1735719660000
+      "createdAt": 1735719660000,
+      "status": "sent"
     },
     {
+      "id": "9c6e2a1b-7d5f-4a8c-b3f0-e6d2a9c33333",
       "sender": "Charlie",
       "message": "Looks good overall",
-      "createdAt": 1735719720000
+      "createdAt": 1735719720000,
+      "status": "sent"
     },
     {
+      "id": "2a7c9d6e-1b5f-4a8c-9e3d-f0c6a2b44444",
       "sender": "Diana",
       "message": "Tests passed",
-      "createdAt": 1735719780000
+      "createdAt": 1735719780000,
+      "status": "sent"
     },
-    { "sender": "Alice", "message": "Deploying", "createdAt": 1735719840000 }
+    {
+      "id": "f6c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c55555",
+      "sender": "Alice",
+      "message": "Deploying",
+      "createdAt": 1735719840000,
+      "status": "sent"
+    },
+    {
+      "id": "7d2e6a9c-4b5f-4a8c-9d1e-f0c3a6b66666",
+      "sender": "test-username",
+      "message": "bright",
+      "createdAt": 1767125114022,
+      "status": "sent"
+    },
+    {
+      "id": "a6f2c9d7-5b4e-4a8c-b1d0-3e6f2a9c77777",
+      "sender": "bright",
+      "message": "this is a",
+      "createdAt": 1767125343880,
+      "status": "sent"
+    },
+    {
+      "id": "c9a6e2d7-5f4b-4a8c-b1d3-0e6f2a9c88888",
+      "sender": "bright",
+      "message": "very bright ",
+      "createdAt": 1767125349161,
+      "status": "sent"
+    },
+    {
+      "id": "2d7c6a9e-5b4f-4a8c-b1d3-e0f6a2c99999",
+      "sender": "bright",
+      "message": "feku insaan",
+      "createdAt": 1767261711189,
+      "status": "sent"
+    },
+    {
+      "id": "9e2a6c7d-5b4f-4a8c-b1d3-e0f6a2c00001",
+      "sender": "bright",
+      "message": "kasto kasto, yesto pani",
+      "createdAt": 1767269257084,
+      "status": "sent"
+    }
   ]
 }
