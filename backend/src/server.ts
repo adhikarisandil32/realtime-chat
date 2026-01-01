@@ -13,34 +13,39 @@ const io = new Server(server, {
   },
 });
 
-const updateUserCount = () => {
-  const count = io.engine.clientsCount;
-  io.emit("client-count", count);
+const updateUserCount = async () => {
+  const users = await io.fetchSockets();
+  console.log({ count: users.length });
+  io.emit("client-count", users.length);
 };
 
 io.on("connection", (socket) => {
   console.log(`[connected] SocketID: ${socket.id}`);
   updateUserCount();
 
-  // socket.on("message", (message) => {
-  //   socket.emit("message", message);
-  // });
-  socket.on("message", async (data: { message: string; sender: string }) => {
-    const createdAt = new Date().getTime();
+  socket.on(
+    "message",
+    async (data: { message: string; sender: string; identifier: string }) => {
+      const createdAt = new Date().getTime();
+      const id = crypto.randomUUID();
 
-    io.emit("message", { ...data, createdAt });
-    await db.update(({ chats }) =>
-      chats.push({
-        message: data.message,
-        sender: data.sender,
-        createdAt,
-      }),
-    );
-  });
+      io.emit("message", { ...data, id, createdAt, status: "sent" });
+      await db.update(({ chats }) =>
+        chats.push({
+          id,
+          message: data.message,
+          sender: data.sender,
+          status: "sent",
+          createdAt,
+        }),
+      );
+    },
+  );
 
   socket.on("connect", updateUserCount);
   socket.on("disconnect", (reason) => {
     console.log(`[disconnected] ${reason}`);
+    socket.disconnect(true);
     updateUserCount();
   });
 
