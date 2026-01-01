@@ -1,26 +1,23 @@
 "use client";
 
-import { getLocal } from "@/utils/local-storage";
 import dynamic from "next/dynamic";
 
-const AskUser = dynamic(() => import("@/components/ask-user"), {
+const Protected = dynamic(() => import("@/providers/protected"), {
+  ssr: false,
+});
+const SocketProvider = dynamic(() => import("@/providers/socket-provider"), {
   ssr: false,
 });
 const SocketChat = dynamic(() => import("@/components/socket-chat"), {
   ssr: false,
 });
-const SocketProvider = dynamic(() => import("@/providers/socket-provider"));
 
 export default function Home() {
-  const username = getLocal("username");
-
-  if (!username) {
-    return <AskUser />;
-  } else {
-    return (
+  return (
+    <Protected>
       <SocketProvider>
-        <SocketChat username={username} />
+        <SocketChat />
       </SocketProvider>
-    );
-  }
+    </Protected>
+  );
 }
