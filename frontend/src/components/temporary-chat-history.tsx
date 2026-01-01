@@ -2,19 +2,25 @@ import { cn } from "@/lib/utils";
 import { useProtected } from "@/providers/protected";
 import { useSocket } from "@/providers/socket-provider";
 import { dateParse } from "@/utils/date-parse";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
-function TemporaryHistory({
-  ref: latestConversationRef,
-}: {
-  ref: React.RefObject<HTMLDivElement | null>;
-}) {
+function TemporaryHistory() {
   const { username } = useProtected();
   const { messages } = useSocket();
 
+  const elemRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // console.log("temporary-chat-mounted");
+    elemRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [messages]);
+
   return (
     <>
-      {messages.map((chat, chatIdx, chatArr) => (
+      {messages.map((chat) => (
         <div
           key={`${chat.identifier}-${chat.createdAt}`}
           className={cn(
@@ -25,19 +31,12 @@ function TemporaryHistory({
             chat.status === "pending" ? "bg-muted-foreground" : ""
           )}
           title={dateParse(chat.createdAt)}
-          ref={(elem) => {
-            if (chatIdx + 1 === chatArr.length) {
-              latestConversationRef.current = elem;
-            }
-            // if (pageIdx + 1 === pageArr.length && chatIdx === 0) {
-            //   elementToObserveForFetching(elem);
-            // }
-          }}
         >
           <p className="font-semibold truncate">{chat.sender}: </p>
           <p>{chat.message}</p>
         </div>
       ))}
+      <div ref={elemRef} />
     </>
   );
 }
