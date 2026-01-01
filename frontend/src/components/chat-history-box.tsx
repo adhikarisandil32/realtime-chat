@@ -5,6 +5,7 @@ import { dateParse } from "@/utils/date-parse";
 import { cn } from "@/lib/utils";
 import { useSocket } from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
+import { useIntersectionObserver } from "usehooks-ts";
 
 function ChatHistoryBox({ username }: { username: string }) {
   const {
@@ -16,15 +17,24 @@ function ChatHistoryBox({ username }: { username: string }) {
     hasNextPage,
     fetchNextPage,
   } = useInfiniteChats();
-  const latestConversationRef = useRef<HTMLDivElement | null>(null);
 
-  const { messages } = useSocket();
+  const { setMessages } = useSocket();
+  const { isIntersecting, ref: firstConversationRef } = useIntersectionObserver(
+    { threshold: 0 }
+  );
+
   useEffect(() => {
-    latestConversationRef.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-  }, [chats, chats?.pages, messages]);
+    setMessages((prev) =>
+      prev.filter((message) => message.status === "pending")
+    );
+  }, [chats]);
+
+  useEffect(() => {
+    if (isIntersecting) {
+      fetchNextPage();
+    }
+  }, [isIntersecting, fetchNextPage]);
+  // console.log({ isIntersecting });
 
   if (isPending) {
     return <Loading />;
@@ -32,7 +42,7 @@ function ChatHistoryBox({ username }: { username: string }) {
 
   if (isError || !isSuccess) {
     return (
-      <div className="col-span-full text-xl text-center">
+      <div className="col-span-full text-sm text-red-400 text-center">
         Failed to load messages
       </div>
     );
@@ -42,21 +52,14 @@ function ChatHistoryBox({ username }: { username: string }) {
     <>
       {isFetchingNextPage ? (
         <Loading />
-      ) : hasNextPage ? (
-        <button
-          className="col-span-full cursor-pointer border border-muted-foreground rounded-sm"
-          onClick={() => fetchNextPage()}
-        >
-          Load More
-        </button>
-      ) : (
+      ) : hasNextPage ? null : (
         <p className="text-center text-sm text-muted-foreground col-span-full">
           You&apos;ve reached the top of the conversation
         </p>
       )}
 
       {[...chats.pages].reverse().map((page, pageIdx) =>
-        page.data.map((chat, chatIdx, chatArr) => (
+        page.data.map((chat, chatIdx) => (
           <div
             key={`${chat.id}-${chat.createdAt}`}
             className={cn(
@@ -67,8 +70,8 @@ function ChatHistoryBox({ username }: { username: string }) {
             )}
             title={dateParse(chat.createdAt)}
             ref={(elem) => {
-              if (chatIdx + 1 === chatArr.length && pageIdx === 0) {
-                latestConversationRef.current = elem;
+              if (chatIdx === 0 && pageIdx === 0) {
+                firstConversationRef(elem);
               }
             }}
           >
@@ -78,7 +81,7 @@ function ChatHistoryBox({ username }: { username: string }) {
         ))
       )}
 
-      <TemporaryHistory ref={latestConversationRef} />
+      <TemporaryHistory />
     </>
   );
 }
