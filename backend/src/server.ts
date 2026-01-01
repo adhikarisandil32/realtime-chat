@@ -49,16 +49,13 @@ io.on("connection", (socket) => {
     updateUserCount();
   });
 
-  // let activelyTypingUsers: string[] = [];
   socket.on("typing-on", (data: { user: string }) => {
-    // activelyTypingUsers.push(data.user);
+    console.log(`"${data.user}" typing on`);
     socket.broadcast.emit("typing-on", data.user);
   });
 
   socket.on("typing-off", (data: { user: string }) => {
-    // activelyTypingUsers = activelyTypingUsers.filter(
-    //   (user) => user !== data.user,
-    // );
+    console.log(`"${data.user}" typing off`);
     socket.broadcast.emit("typing-off", data.user);
   });
 });
