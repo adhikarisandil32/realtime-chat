@@ -38,14 +38,20 @@ function SocketChat() {
 
   const handleTyping = () => {
     let timeout: ReturnType<typeof setTimeout>;
+    let lastTime: number = 0;
 
     return () => {
-      socket.emit("typing-on", { user: username });
+      const currentTime = Date.now();
+      if (currentTime - lastTime >= 2 * 1000) {
+        socket.emit("typing-on", { user: username });
+        lastTime = currentTime;
+      }
+
       clearTimeout(timeout);
 
       timeout = setTimeout(
         () => socket.emit("typing-off", { user: username }),
-        2 * 1000
+        1.5 * 1000
       );
     };
   };
