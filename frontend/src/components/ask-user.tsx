@@ -1,17 +1,16 @@
 "use client";
 
-import { setLocal } from "@/utils/local-storage";
 import { useRef, type FormEvent } from "react";
 
-export default function AskUser() {
+export default function AskUser({ login }: { login: (value: string) => void }) {
   const usernameRef = useRef<HTMLInputElement | null>(null);
 
   const handleUsernameSet = (e: FormEvent) => {
     e.preventDefault();
     if (!usernameRef.current || !usernameRef.current.value?.trim()) return;
 
-    setLocal("username", usernameRef.current.value.trim());
-    window.location.reload();
+    const username = usernameRef.current.value.trim();
+    login(username);
   };
 
   return (
