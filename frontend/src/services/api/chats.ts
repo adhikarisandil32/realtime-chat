@@ -44,5 +44,6 @@ export const useInfiniteChats = (config?: AxiosRequestConfig) => {
         throw error;
       }
     },
+    refetchInterval: 60 * 60 * 1000,
   });
 };
