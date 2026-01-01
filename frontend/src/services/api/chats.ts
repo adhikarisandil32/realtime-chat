@@ -1,7 +1,4 @@
-import {
-  useSuspenseInfiniteQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useInfiniteQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { AxiosRequestConfig } from "axios";
 import { api } from "../axios-instance";
 import { queryKeys } from "@/utils/react-query-keys";
@@ -27,12 +24,13 @@ export const useChats = (config?: AxiosRequestConfig) => {
 };
 
 export const useInfiniteChats = (config?: AxiosRequestConfig) => {
-  return useSuspenseInfiniteQuery<IPaginatedResponse<IChatResponse>>({
-    initialPageParam: config?.params.page ?? 1,
+  return useInfiniteQuery<IPaginatedResponse<IChatResponse>>({
+    initialPageParam: 1,
     getNextPageParam: ({ pagination }) => pagination.nextPage ?? null,
     getPreviousPageParam: ({ pagination }) => pagination.prevPage ?? null,
     queryKey: [queryKeys.chats],
     queryFn: async ({ pageParam }) => {
+      // await new Promise((resolve) => setTimeout(resolve, 5 * 1000));
       try {
         const response = await api.get("/api/chats", {
           ...config,
