@@ -13,15 +13,28 @@ const io = new Server(server, {
   },
 });
 
+const activeUsers = new Map();
+
 const updateUserCount = async () => {
-  const users = await io.fetchSockets();
-  console.log({ count: users.length });
-  io.emit("client-count", users.length);
+  // const users = await io.fetchSockets();
+  const usersCount = activeUsers.size;
+  console.log({ count: usersCount });
+  io.emit("client-count", usersCount);
+  io.emit("active-clients", Array.from(activeUsers.values()));
 };
 
 io.on("connection", (socket) => {
   console.log(`[connected] SocketID: ${socket.id}`);
-  updateUserCount();
+
+  socket.on("connected-user", (data: { user: string }) => {
+    if (Array.from(activeUsers.values()).includes(data.user)) {
+      updateUserCount();
+      return;
+    }
+
+    activeUsers.set(socket.id, data.user);
+    updateUserCount();
+  });
 
   socket.on(
     "message",
@@ -42,20 +55,18 @@ io.on("connection", (socket) => {
     },
   );
 
-  socket.on("connect", updateUserCount);
   socket.on("disconnect", (reason) => {
     console.log(`[disconnected] ${reason}`);
     socket.disconnect(true);
+    activeUsers.delete(socket.id);
     updateUserCount();
   });
 
   socket.on("typing-on", (data: { user: string }) => {
-    console.log(`"${data.user}" typing on`);
     socket.broadcast.emit("typing-on", data.user);
   });
 
   socket.on("typing-off", (data: { user: string }) => {
-    console.log(`"${data.user}" typing off`);
     socket.broadcast.emit("typing-off", data.user);
   });
 });
