@@ -9,10 +9,11 @@ function OnlineUserList() {
       {onlineUsers.map((user) => (
         <div
           key={user}
+          title={user}
           className="flex items-center gap-2"
         >
-          <span className="block size-2.5 rounded-full bg-green-800" />
-          <span>{user}</span>
+          <span className="block shrink-0 size-2.5 rounded-full bg-green-800" />
+          <span className="truncate">{user}</span>
         </div>
       ))}
     </div>
