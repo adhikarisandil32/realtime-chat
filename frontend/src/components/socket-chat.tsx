@@ -1,10 +1,11 @@
 import { useSocket } from "@/providers/socket-provider";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useRef, type FormEvent } from "react";
 import ClientCount from "./client-counts";
 import ChatHistoryBox from "./chat-history-box";
 import { useProtected } from "../providers/protected";
 import { IClientChat } from "@/types/chat-response";
 import TypingIndicator from "./typing-indictor";
+import OnlineUsersList from "./online-users-list";
 
 function SocketChat() {
   // React.useEffect(() => {
@@ -58,49 +59,61 @@ function SocketChat() {
 
   return (
     <div className="flex h-screen justify-center items-center">
-      <div className="space-y-4 w-96 relative">
-        <div className="border-2 border-black h-125 overflow-auto w-full">
-          <div className="sticky top-0 bg-gray-100">
-            <ClientCount className="text-center font-bold " />
-            <TypingIndicator className="py-1 text-sm text-muted-foreground text-center" />
+      <div className="flex gap-4 items-start">
+        <div className="space-y-4 w-96 relative">
+          <div className="border-2 border-black h-125 overflow-auto w-full">
+            <div className="sticky top-0 bg-gray-100">
+              <h2 className="text-center font-bold">Conversation Box</h2>
+              <TypingIndicator className="py-1 text-sm text-muted-foreground text-center" />
+            </div>
+
+            <div className="my-1 px-2 space-y-1 grid grid-cols-6">
+              <ChatHistoryBox username={username} />
+            </div>
           </div>
 
-          <div className="my-1 px-2 space-y-1 grid grid-cols-6">
-            <ChatHistoryBox username={username} />
-          </div>
+          <form
+            className="flex w-full flex-wrap gap-1"
+            onSubmit={handleSend}
+          >
+            <input
+              ref={inputMessageRef}
+              onKeyDown={handleTyping()}
+              type="text"
+              placeholder="Enter message"
+              className="border border-black rounded-sm w-full py-1 px-2"
+            />
+            <div className="flex justify-between w-full">
+              <button
+                type="button"
+                className="text-gray-100 bg-red-600 rounded-sm px-4 w-fit"
+                onClick={() => {
+                  socket.disconnect();
+                  logout();
+                }}
+              >
+                Exit
+              </button>
+
+              <button
+                type="submit"
+                className="border border-black rounded-sm px-4 w-fit"
+              >
+                Send
+              </button>
+            </div>
+          </form>
         </div>
 
-        <form
-          className="flex w-full flex-wrap gap-1"
-          onSubmit={handleSend}
-        >
-          <input
-            ref={inputMessageRef}
-            onKeyDown={handleTyping()}
-            type="text"
-            placeholder="Enter message"
-            className="border border-black rounded-sm w-full py-1 px-2"
-          />
-          <div className="flex justify-between w-full">
-            <button
-              type="button"
-              className="text-gray-100 bg-red-600 rounded-sm px-4 w-fit"
-              onClick={() => {
-                socket.disconnect();
-                logout();
-              }}
-            >
-              Exit
-            </button>
+        <div className="overflow-auto max-h-125 w-63 border-2 border-black">
+          <h2 className="font-bold text-center bg-gray-100 top-0 sticky">
+            Online Users <ClientCount />
+          </h2>
 
-            <button
-              type="submit"
-              className="border border-black rounded-sm px-4 w-fit"
-            >
-              Send
-            </button>
+          <div className="mt-1">
+            <OnlineUsersList />
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

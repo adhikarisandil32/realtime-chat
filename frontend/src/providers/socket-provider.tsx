@@ -3,10 +3,12 @@ import { io, type Socket } from "socket.io-client";
 // import { socket } from "@/services/socket/socket";
 import { envConfig } from "@/config/config";
 import { IClientChat } from "@/types/chat-response";
+import { useProtected } from "./protected";
 
 interface ISocketProviderContext {
   socket: Socket;
-  connectedClients: number;
+  usersCount: number;
+  onlineUsers: string[];
   emitMessage: (data: IClientChat) => void;
   messages: IClientChat[];
   setMessages: React.Dispatch<React.SetStateAction<IClientChat[]>>;
@@ -32,15 +34,17 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [connectedClients, setConnectedClients] = useState(0);
+  const { username } = useProtected();
+  const [usersCount, setUsersCount] = useState(0);
   const [messages, setMessages] = useState<IClientChat[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
   const emitMessage = (data: IClientChat) => {
     socket.emit("message", data);
   };
 
   useEffect(() => {
-    const countListener = (count: number) => setConnectedClients(count);
+    const countListener = (count: number) => setUsersCount(count);
     const messageHandler = (messageData: IClientChat) =>
       setMessages((prev) => {
         const strictlyPreviousMessages = prev.filter(
@@ -51,19 +55,31 @@ export default function SocketProvider({
       });
 
     socket.connect();
+    if (username) {
+      socket.emit("connected-user", { user: username });
+    }
     socket.on("client-count", countListener);
     socket.on("message", messageHandler);
+    socket.on("active-clients", (clients: string[]) => setOnlineUsers(clients));
 
     return () => {
       socket.disconnect();
       socket.off("client-count", countListener);
       socket.off("message", messageHandler);
+      socket.off("active-clients");
     };
   }, [socket]);
 
   return (
     <SocketContext.Provider
-      value={{ socket, connectedClients, emitMessage, messages, setMessages }}
+      value={{
+        socket,
+        usersCount,
+        onlineUsers,
+        emitMessage,
+        messages,
+        setMessages,
+      }}
     >
       {children}
     </SocketContext.Provider>
