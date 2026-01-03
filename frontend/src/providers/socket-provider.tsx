@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 // import { socket } from "@/services/socket/socket";
 import { envConfig } from "@/config/config";
@@ -12,6 +12,7 @@ interface ISocketProviderContext {
   emitMessage: (data: IClientChat) => void;
   messages: IClientChat[];
   setMessages: React.Dispatch<React.SetStateAction<IClientChat[]>>;
+  emptyMessageElement: React.RefObject<HTMLDivElement | null>;
 }
 
 const SocketContext = React.createContext<ISocketProviderContext | undefined>(
@@ -34,6 +35,7 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const emptyMessageElement = useRef<HTMLDivElement | null>(null);
   const { username } = useProtected();
   const [usersCount, setUsersCount] = useState(0);
   const [messages, setMessages] = useState<IClientChat[]>([]);
@@ -79,6 +81,7 @@ export default function SocketProvider({
         emitMessage,
         messages,
         setMessages,
+        emptyMessageElement,
       }}
     >
       {children}
