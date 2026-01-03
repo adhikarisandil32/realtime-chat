@@ -8,15 +8,9 @@ import TypingIndicator from "./typing-indictor";
 import OnlineUsersList from "./online-users-list";
 
 function SocketChat() {
-  // React.useEffect(() => {
-  //   console.log("socket chat mounted");
-
-  //   return () => console.log("socket chat unmounted");
-  // });
-
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
 
-  const { socket, emitMessage, setMessages } = useSocket();
+  const { socket, emitMessage, setMessages, emptyMessageElement } = useSocket();
   const { username, logout } = useProtected();
 
   const handleSend = (e: FormEvent) => {
@@ -35,6 +29,10 @@ function SocketChat() {
     setMessages((prev) => [...prev, messageData]);
 
     inputMessageRef.current.value = "";
+    emptyMessageElement.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   };
 
   const handleTyping = () => {
