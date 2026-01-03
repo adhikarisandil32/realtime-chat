@@ -19,9 +19,8 @@ function ChatHistoryBox({ username }: { username: string }) {
   } = useInfiniteChats();
 
   const { setMessages } = useSocket();
-  const { isIntersecting, ref: firstConversationRef } = useIntersectionObserver(
-    { threshold: 0 }
-  );
+
+  const lastFetchedChatElement = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMessages((prev) =>
@@ -29,12 +28,18 @@ function ChatHistoryBox({ username }: { username: string }) {
     );
   }, [chats]);
 
+  // useEffect(() => {
+  //   if (isIntersecting) {
+  //     fetchNextPage();
+  //   }
+  // }, [isIntersecting, fetchNextPage]);
+
   useEffect(() => {
-    if (isIntersecting) {
-      fetchNextPage();
-    }
-  }, [isIntersecting, fetchNextPage]);
-  // console.log({ isIntersecting });
+    lastFetchedChatElement.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+  }, [isSuccess]);
 
   if (isPending) {
     return <Loading />;
@@ -58,8 +63,8 @@ function ChatHistoryBox({ username }: { username: string }) {
         </p>
       )}
 
-      {[...chats.pages].reverse().map((page, pageIdx) =>
-        page.data.map((chat, chatIdx) => (
+      {[...chats.pages].reverse().map((page, pageIdx, pageArr) =>
+        page.data.map((chat, chatIdx, chatsArr) => (
           <div
             key={`${chat.id}-${chat.createdAt}`}
             className={cn(
@@ -70,8 +75,11 @@ function ChatHistoryBox({ username }: { username: string }) {
             )}
             title={dateParse(chat.createdAt)}
             ref={(elem) => {
-              if (chatIdx === 0 && pageIdx === 0) {
-                firstConversationRef(elem);
+              if (
+                chatIdx + 1 === chatsArr.length &&
+                pageIdx + 1 === pageArr.length
+              ) {
+                lastFetchedChatElement.current = elem;
               }
             }}
           >
