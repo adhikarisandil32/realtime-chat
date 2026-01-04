@@ -2,19 +2,22 @@ import { cn } from "@/lib/utils";
 import { useProtected } from "@/providers/protected";
 import { useSocket } from "@/providers/socket-provider";
 import { dateParse } from "@/utils/date-parse";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 function TemporaryHistory() {
   const { username } = useProtected();
-  const { messages, emptyMessageElement } = useSocket();
+  const { messages, scrollToLatest, emptyMessageElement } = useSocket();
 
-  // useEffect(() => {
-  //   // console.log("temporary-chat-mounted");
-  //   elemRef.current?.scrollIntoView({
-  //     behavior: "smooth",
-  //     block: "end",
-  //   });
-  // }, [messages]);
+  useEffect(() => {
+    // is the state of messages has changed and scrollToLatest is set to true, only then the it is scrolled to latest message
+    if (scrollToLatest.current) {
+      emptyMessageElement.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+      });
+      scrollToLatest.current = false;
+    }
+  }, [messages]);
 
   return (
     <>
@@ -34,6 +37,7 @@ function TemporaryHistory() {
           <p>{chat.message}</p>
         </div>
       ))}
+
       <div ref={emptyMessageElement} />
     </>
   );
