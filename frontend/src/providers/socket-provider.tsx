@@ -12,6 +12,7 @@ interface ISocketProviderContext {
   emitMessage: (data: IClientChat) => void;
   messages: IClientChat[];
   setMessages: React.Dispatch<React.SetStateAction<IClientChat[]>>;
+  scrollToLatest: React.RefObject<boolean>;
   emptyMessageElement: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -35,7 +36,9 @@ export default function SocketProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const scrollToLatest = useRef(false);
   const emptyMessageElement = useRef<HTMLDivElement | null>(null);
+
   const { username } = useProtected();
   const [usersCount, setUsersCount] = useState(0);
   const [messages, setMessages] = useState<IClientChat[]>([]);
@@ -81,6 +84,7 @@ export default function SocketProvider({
         emitMessage,
         messages,
         setMessages,
+        scrollToLatest,
         emptyMessageElement,
       }}
     >
