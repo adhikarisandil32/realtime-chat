@@ -5,9 +5,14 @@ import { dateParse } from "@/utils/date-parse";
 import { cn } from "@/lib/utils";
 import { useSocket } from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
-import { useIntersectionObserver } from "usehooks-ts";
 
-function ChatHistoryBox({ username }: { username: string }) {
+function ChatHistoryBox({
+  scrollingElement,
+  username,
+}: {
+  scrollingElement: React.RefObject<HTMLDivElement | null>;
+  username: string;
+}) {
   const {
     data: chats,
     isPending,
@@ -18,9 +23,9 @@ function ChatHistoryBox({ username }: { username: string }) {
     fetchNextPage,
   } = useInfiniteChats();
 
-  const { setMessages } = useSocket();
+  const { setMessages, scrollToLatest, emptyMessageElement } = useSocket();
 
-  const lastFetchedChatElement = useRef<HTMLDivElement | null>(null);
+  const elementToWatchForRefetch = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMessages((prev) =>
@@ -28,18 +33,28 @@ function ChatHistoryBox({ username }: { username: string }) {
     );
   }, [chats]);
 
-  // useEffect(() => {
-  //   if (isIntersecting) {
-  //     fetchNextPage();
-  //   }
-  // }, [isIntersecting, fetchNextPage]);
+  useEffect(() => {
+    scrollToLatest.current = true;
+    setMessages((prev) => [...prev]);
+  }, [isSuccess]);
 
   useEffect(() => {
-    lastFetchedChatElement.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
-  }, [isSuccess]);
+    const listenerFn = () => {
+      console.log({
+        scrollingElement: scrollingElement.current,
+        scrollHeight: scrollingElement.current?.scrollHeight,
+        scrollTop: scrollingElement.current?.scrollTop,
+        offsetParent: emptyMessageElement.current?.offsetParent,
+        offsetTop: emptyMessageElement.current?.offsetTop,
+      });
+    };
+
+    scrollingElement.current?.addEventListener("scroll", listenerFn);
+
+    return () => {
+      scrollingElement.current?.removeEventListener("scroll", listenerFn);
+    };
+  }, [chats]);
 
   if (isPending) {
     return <Loading />;
@@ -55,6 +70,8 @@ function ChatHistoryBox({ username }: { username: string }) {
 
   return (
     <>
+      <div ref={elementToWatchForRefetch} />
+
       {isFetchingNextPage ? (
         <Loading />
       ) : hasNextPage ? null : (
@@ -63,8 +80,8 @@ function ChatHistoryBox({ username }: { username: string }) {
         </p>
       )}
 
-      {[...chats.pages].reverse().map((page, pageIdx, pageArr) =>
-        page.data.map((chat, chatIdx, chatsArr) => (
+      {[...chats.pages].reverse().map((page) =>
+        page.data.map((chat) => (
           <div
             key={`${chat.id}-${chat.createdAt}`}
             className={cn(
@@ -74,17 +91,9 @@ function ChatHistoryBox({ username }: { username: string }) {
                 : "border border-muted-foreground col-start-1 col-end-6"
             )}
             title={dateParse(chat.createdAt)}
-            ref={(elem) => {
-              if (
-                chatIdx + 1 === chatsArr.length &&
-                pageIdx + 1 === pageArr.length
-              ) {
-                lastFetchedChatElement.current = elem;
-              }
-            }}
           >
-            <p className="font-semibold truncate">{chat.sender}: </p>
-            <p>{chat.message}</p>
+            <p className="font-semibold truncate">{chat.sender}:</p>
+            <p className="text-sm">{chat.message}</p>
           </div>
         ))
       )}
