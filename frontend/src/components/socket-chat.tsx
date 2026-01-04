@@ -9,8 +9,9 @@ import OnlineUsersList from "./online-users-list";
 
 function SocketChat() {
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
+  const scrollingElement = useRef<HTMLDivElement | null>(null);
 
-  const { socket, emitMessage, setMessages, emptyMessageElement } = useSocket();
+  const { socket, emitMessage, setMessages, scrollToLatest } = useSocket();
   const { username, logout } = useProtected();
 
   const handleSend = (e: FormEvent) => {
@@ -25,14 +26,11 @@ function SocketChat() {
       status: "pending",
       identifier: crypto.randomUUID(),
     };
+    inputMessageRef.current.value = "";
+    scrollToLatest.current = true;
+
     emitMessage(messageData);
     setMessages((prev) => [...prev, messageData]);
-
-    inputMessageRef.current.value = "";
-    emptyMessageElement.current?.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-    });
   };
 
   const handleTyping = () => {
@@ -59,14 +57,20 @@ function SocketChat() {
     <div className="flex h-screen justify-center items-center">
       <div className="flex gap-4 items-start">
         <div className="space-y-4 w-96 relative">
-          <div className="border-2 border-black h-125 overflow-auto w-full">
-            <div className="sticky top-0 bg-gray-100">
+          <div
+            className="border-2 border-black h-125 overflow-auto w-full"
+            ref={scrollingElement}
+          >
+            <div className="sticky top-0 z-10 bg-gray-100">
               <h2 className="text-center font-bold">Conversation Box</h2>
               <TypingIndicator className="py-1 text-sm text-muted-foreground text-center" />
             </div>
 
-            <div className="my-1 px-2 space-y-1 grid grid-cols-6">
-              <ChatHistoryBox username={username} />
+            <div className="my-1 px-2 space-y-1 grid grid-cols-6 border-2 border-black relative">
+              <ChatHistoryBox
+                scrollingElement={scrollingElement}
+                username={username}
+              />
             </div>
           </div>
 
