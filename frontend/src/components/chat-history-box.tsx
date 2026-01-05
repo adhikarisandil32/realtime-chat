@@ -1,5 +1,5 @@
 import { useInfiniteChats } from "@/services/api/chats";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect } from "react";
 import Loading from "./loading-animation";
 import { dateParse } from "@/utils/date-parse";
 import { cn } from "@/lib/utils";
@@ -7,10 +7,10 @@ import { useSocket } from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
 
 function ChatHistoryBox({
-  scrollingElement,
+  // scrollContainer,
   username,
 }: {
-  scrollingElement: React.RefObject<HTMLDivElement | null>;
+  // scrollContainer: React.RefObject<HTMLDivElement | null>;
   username: string;
 }) {
   const {
@@ -23,9 +23,32 @@ function ChatHistoryBox({
     fetchNextPage,
   } = useInfiniteChats();
 
-  const { setMessages, scrollToLatest, emptyMessageElement } = useSocket();
+  const { setMessages, scrollToLatest } = useSocket();
+  // const {username} = useProtected()
 
-  const elementToWatchForRefetch = useRef<HTMLDivElement | null>(null);
+  // const elementToWatchForRefetch = useRef<HTMLDivElement | null>(null);
+  const elementToWatchForRefetchCallback = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasNextPage) {
+            fetchNextPage();
+          }
+        },
+        {
+          threshold: 0,
+        }
+      );
+      observer.observe(node);
+
+      return () => {
+        observer.disconnect();
+      };
+    },
+    [hasNextPage]
+  );
 
   useEffect(() => {
     setMessages((prev) =>
@@ -38,23 +61,7 @@ function ChatHistoryBox({
     setMessages((prev) => [...prev]);
   }, [isSuccess]);
 
-  useEffect(() => {
-    const listenerFn = () => {
-      console.log({
-        scrollingElement: scrollingElement.current,
-        scrollHeight: scrollingElement.current?.scrollHeight,
-        scrollTop: scrollingElement.current?.scrollTop,
-        offsetParent: emptyMessageElement.current?.offsetParent,
-        offsetTop: emptyMessageElement.current?.offsetTop,
-      });
-    };
-
-    scrollingElement.current?.addEventListener("scroll", listenerFn);
-
-    return () => {
-      scrollingElement.current?.removeEventListener("scroll", listenerFn);
-    };
-  }, [chats]);
+  // useEffect(() => {}, [chats]);
 
   if (isPending) {
     return <Loading />;
@@ -70,7 +77,10 @@ function ChatHistoryBox({
 
   return (
     <>
-      <div ref={elementToWatchForRefetch} />
+      <div
+        ref={elementToWatchForRefetchCallback}
+        className="col-span-full"
+      />
 
       {isFetchingNextPage ? (
         <Loading />
