@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { useProtected } from "@/providers/protected";
 import { useSocket } from "@/providers/socket-provider";
 import { dateParse } from "@/utils/date-parse";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 function TemporaryHistory() {
   const { username } = useProtected();
@@ -38,7 +38,10 @@ function TemporaryHistory() {
         </div>
       ))}
 
-      <div ref={emptyMessageElement} />
+      <div
+        ref={emptyMessageElement}
+        className="col-span-full"
+      />
     </>
   );
 }
