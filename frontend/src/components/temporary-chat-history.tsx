@@ -1,15 +1,12 @@
 import { cn } from "@/lib/utils";
 import { useProtected } from "@/providers/protected";
-import {
-  useSocketGetters,
-  useSocketSetters,
-} from "@/providers/socket-provider";
+import { useSocketGetters } from "@/providers/socket-provider";
 import { dateParse } from "@/utils/date-parse";
 import React, { useEffect } from "react";
 
 function TemporaryHistory() {
   const { username } = useProtected();
-  const { scrollToLatest, emptyMessageElement } = useSocketSetters();
+  const { scrollToLatest, emptyMessageElement } = useSocketGetters();
   const { messages } = useSocketGetters();
 
   useEffect(() => {

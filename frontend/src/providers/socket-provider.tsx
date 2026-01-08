@@ -14,8 +14,6 @@ import { useProtected } from "./protected";
 interface ISocketSettersProviderContext {
   emitMessage: (data: IClientChat) => void;
   setMessages: React.Dispatch<React.SetStateAction<IClientChat[]>>;
-  scrollToLatest: React.RefObject<boolean>;
-  emptyMessageElement: React.RefObject<HTMLDivElement | null>;
 }
 
 interface ISocketGettersProviderContext {
@@ -23,6 +21,8 @@ interface ISocketGettersProviderContext {
   usersCount: number;
   onlineUsers: string[];
   messages: IClientChat[];
+  scrollToLatest: React.RefObject<boolean>;
+  emptyMessageElement: React.RefObject<HTMLDivElement | null>;
 }
 
 const SocketSettersContext = React.createContext<
@@ -97,7 +97,7 @@ export default function SocketProvider({
   }, [socket]);
 
   const setterValues: ISocketSettersProviderContext = useMemo(
-    () => ({ emitMessage, setMessages, scrollToLatest, emptyMessageElement }),
+    () => ({ emitMessage, setMessages }),
     []
   );
 
@@ -106,6 +106,8 @@ export default function SocketProvider({
     usersCount,
     onlineUsers,
     messages,
+    scrollToLatest,
+    emptyMessageElement,
   };
 
   return (

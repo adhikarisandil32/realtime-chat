@@ -13,8 +13,8 @@ import OnlineUsersList from "./online-users-list";
 function SocketChat() {
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
 
-  const { emitMessage, setMessages, scrollToLatest } = useSocketSetters();
-  const { socket } = useSocketGetters();
+  const { emitMessage, setMessages } = useSocketSetters();
+  const { socket, scrollToLatest } = useSocketGetters();
   const { username, logout } = useProtected();
 
   React.useEffect(() => {
