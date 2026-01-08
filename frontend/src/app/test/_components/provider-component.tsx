@@ -2,17 +2,35 @@ import React, { useMemo } from "react";
 import Button from "./button";
 
 interface IProviderContext {
-  state: boolean;
-  setState: React.Dispatch<React.SetStateAction<boolean>>;
+  Setters: {
+    setState: React.Dispatch<React.SetStateAction<boolean>>;
+    setTest: React.Dispatch<React.SetStateAction<string>>;
+  };
+  Getters: {
+    state: boolean;
+    test: string;
+  };
 }
 
-const ProviderContext = React.createContext<IProviderContext | undefined>(
-  undefined
-);
+const SettersProviderContext = React.createContext<
+  IProviderContext["Setters"] | undefined
+>(undefined);
 
-export const useProviderContext = () => {
-  const context = React.useContext(ProviderContext);
+const GettersProviderContext = React.createContext<
+  IProviderContext["Getters"] | undefined
+>(undefined);
 
+export const useProviderSettersContext = () => {
+  const context = React.useContext(SettersProviderContext);
+  if (!context) {
+    throw new Error("use context within ProviderContext wrapper");
+  }
+
+  return context;
+};
+
+export const useProviderGettersContext = () => {
+  const context = React.useContext(GettersProviderContext);
   if (!context) {
     throw new Error("use context within ProviderContext wrapper");
   }
@@ -30,7 +48,7 @@ export default function ProviderComponent({
 
   React.useEffect(() => {
     console.log("ProviderComponent mounted");
-    setTest("not test");
+    // setTest("not test");
 
     return () => {
       console.log("ProviderComponent unmounted");
@@ -46,25 +64,27 @@ export default function ProviderComponent({
   //   console.log("setState's reference changed");
   // }, [setState]);
 
-  // const values = useMemo(() => ({ state, setState }), []);
-  const values = { state, setState, test, setTest };
+  const setterValues = useMemo(() => ({ setTest, setState }), []);
+  // const setterValues = { setTest, setState };
+  const getterValues = { state, test };
 
   return (
-    <ProviderContext.Provider value={values}>
-      <div className="mx-auto w-7xl">
-        <div className="w-fit mx-auto">
-          <p>{`${state} (From ProviderComponent)`}</p>
-          {children}
-          <br />
-          <Button
-            onClick={() =>
-              setTest((prev) => (prev === "test" ? "not test" : "test"))
-            }
-          >
-            Click (From ProviderComponent) - {test}
-          </Button>
+    <SettersProviderContext.Provider value={setterValues}>
+      <GettersProviderContext.Provider value={getterValues}>
+        <div className="mx-auto w-7xl">
+          <div className="w-fit mx-auto">
+            {children}
+            <br />
+            <Button
+              onClick={() =>
+                setTest((prev) => (prev === "test" ? "not test" : "test"))
+              }
+            >
+              Click (From ProviderComponent)
+            </Button>
+          </div>
         </div>
-      </div>
-    </ProviderContext.Provider>
+      </GettersProviderContext.Provider>
+    </SettersProviderContext.Provider>
   );
 }
