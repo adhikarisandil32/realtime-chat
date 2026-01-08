@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from "react";
 import Loading from "./loading-animation";
 import { dateParse } from "@/utils/date-parse";
 import { cn } from "@/lib/utils";
-import { useSocket } from "@/providers/socket-provider";
+import { useSocketSetters } from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
 
 function ChatHistoryBox({
@@ -23,7 +23,7 @@ function ChatHistoryBox({
     fetchNextPage,
   } = useInfiniteChats();
 
-  const { setMessages, scrollToLatest } = useSocket();
+  const { setMessages, scrollToLatest } = useSocketSetters();
   // const {username} = useProtected()
 
   // const elementToWatchForRefetch = useRef<HTMLDivElement | null>(null);

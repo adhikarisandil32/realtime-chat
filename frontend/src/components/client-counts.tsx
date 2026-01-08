@@ -1,8 +1,8 @@
-import { useSocket } from "@/providers/socket-provider";
+import { useSocketGetters } from "@/providers/socket-provider";
 import React from "react";
 
 function ClientCount() {
-  const { usersCount } = useSocket();
+  const { usersCount } = useSocketGetters();
 
   return (
     <>

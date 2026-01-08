@@ -1,8 +1,8 @@
-import { useSocket } from "@/providers/socket-provider";
+import { useSocketGetters } from "@/providers/socket-provider";
 import React from "react";
 
 function OnlineUserList() {
-  const { onlineUsers } = useSocket();
+  const { onlineUsers } = useSocketGetters();
 
   return (
     <div className="space-y-2 p-2">

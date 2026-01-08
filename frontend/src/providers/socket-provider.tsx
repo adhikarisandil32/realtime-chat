@@ -1,28 +1,49 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { io, type Socket } from "socket.io-client";
 // import { socket } from "@/services/socket/socket";
 import { envConfig } from "@/config/config";
 import { IClientChat } from "@/types/chat-response";
 import { useProtected } from "./protected";
 
-interface ISocketProviderContext {
-  socket: Socket;
-  usersCount: number;
-  onlineUsers: string[];
+interface ISocketSettersProviderContext {
   emitMessage: (data: IClientChat) => void;
-  messages: IClientChat[];
   setMessages: React.Dispatch<React.SetStateAction<IClientChat[]>>;
   scrollToLatest: React.RefObject<boolean>;
   emptyMessageElement: React.RefObject<HTMLDivElement | null>;
 }
 
-const SocketContext = React.createContext<ISocketProviderContext | undefined>(
-  undefined
-);
+interface ISocketGettersProviderContext {
+  socket: Socket;
+  usersCount: number;
+  onlineUsers: string[];
+  messages: IClientChat[];
+}
 
-export const useSocket = () => {
-  const context = React.useContext(SocketContext);
+const SocketSettersContext = React.createContext<
+  ISocketSettersProviderContext | undefined
+>(undefined);
 
+const SocketGettersContext = React.createContext<
+  ISocketGettersProviderContext | undefined
+>(undefined);
+
+export const useSocketSetters = () => {
+  const context = React.useContext(SocketSettersContext);
+  if (!context) {
+    throw new Error("user context within the provider");
+  }
+
+  return context;
+};
+
+export const useSocketGetters = () => {
+  const context = React.useContext(SocketGettersContext);
   if (!context) {
     throw new Error("user context within the provider");
   }
@@ -75,20 +96,23 @@ export default function SocketProvider({
     };
   }, [socket]);
 
+  const setterValues: ISocketSettersProviderContext = useMemo(
+    () => ({ emitMessage, setMessages, scrollToLatest, emptyMessageElement }),
+    []
+  );
+
+  const getterValues: ISocketGettersProviderContext = {
+    socket,
+    usersCount,
+    onlineUsers,
+    messages,
+  };
+
   return (
-    <SocketContext.Provider
-      value={{
-        socket,
-        usersCount,
-        onlineUsers,
-        emitMessage,
-        messages,
-        setMessages,
-        scrollToLatest,
-        emptyMessageElement,
-      }}
-    >
-      {children}
-    </SocketContext.Provider>
+    <SocketSettersContext.Provider value={setterValues}>
+      <SocketGettersContext.Provider value={getterValues}>
+        {children}
+      </SocketGettersContext.Provider>
+    </SocketSettersContext.Provider>
   );
 }

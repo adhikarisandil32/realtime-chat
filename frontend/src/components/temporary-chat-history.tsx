@@ -1,12 +1,16 @@
 import { cn } from "@/lib/utils";
 import { useProtected } from "@/providers/protected";
-import { useSocket } from "@/providers/socket-provider";
+import {
+  useSocketGetters,
+  useSocketSetters,
+} from "@/providers/socket-provider";
 import { dateParse } from "@/utils/date-parse";
 import React, { useEffect } from "react";
 
 function TemporaryHistory() {
   const { username } = useProtected();
-  const { messages, scrollToLatest, emptyMessageElement } = useSocket();
+  const { scrollToLatest, emptyMessageElement } = useSocketSetters();
+  const { messages } = useSocketGetters();
 
   useEffect(() => {
     // is the state of messages has changed and scrollToLatest is set to true, only then the it is scrolled to latest message

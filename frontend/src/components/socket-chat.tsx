@@ -1,4 +1,7 @@
-import { useSocket } from "@/providers/socket-provider";
+import {
+  useSocketGetters,
+  useSocketSetters,
+} from "@/providers/socket-provider";
 import React, { useRef, type FormEvent } from "react";
 import ClientCount from "./client-counts";
 import ChatHistoryBox from "./chat-history-box";
@@ -10,7 +13,8 @@ import OnlineUsersList from "./online-users-list";
 function SocketChat() {
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
 
-  const { socket, emitMessage, setMessages, scrollToLatest } = useSocket();
+  const { emitMessage, setMessages, scrollToLatest } = useSocketSetters();
+  const { socket } = useSocketGetters();
   const { username, logout } = useProtected();
 
   React.useEffect(() => {

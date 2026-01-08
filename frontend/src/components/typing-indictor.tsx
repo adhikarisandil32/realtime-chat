@@ -1,8 +1,8 @@
-import { useSocket } from "@/providers/socket-provider";
+import { useSocketGetters } from "@/providers/socket-provider";
 import { useEffect, useState } from "react";
 
 export default function TypingIndicator({ className }: { className?: string }) {
-  const { socket } = useSocket();
+  const { socket } = useSocketGetters();
   const [isTyping, setIsTyping] = useState({ state: false, user: null });
 
   useEffect(() => {
