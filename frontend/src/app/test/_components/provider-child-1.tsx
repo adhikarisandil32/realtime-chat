@@ -1,15 +1,15 @@
 import React from "react";
-import { useProviderContext } from "./provider-component";
+import { useProviderSettersContext } from "./provider-component";
 import Button from "./button";
 
-export default function ProvChildComp() {
-  const { setState } = useProviderContext();
+export default function ProviderChildOne() {
+  const { setState } = useProviderSettersContext();
 
   React.useEffect(() => {
-    console.log("ProvChildComp mounted");
+    console.log("ProviderChildOne mounted");
 
     return () => {
-      console.log("ProvChildComp unmounted");
+      console.log("ProviderChildOne unmounted");
     };
   });
 
@@ -18,7 +18,7 @@ export default function ProvChildComp() {
       {/* <p>{`${state} (From ProvChildComp)`}</p> */}
       <div>
         <Button onClick={() => setState((prev) => !prev)}>
-          Click Me (From ProvChildComp)
+          Click Me (From ProviderChildOne)
         </Button>
       </div>
     </>
