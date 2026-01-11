@@ -3,11 +3,10 @@ import React, { useCallback, useEffect } from "react";
 import Loading from "./loading-animation";
 import { dateParse } from "@/utils/date-parse";
 import { cn } from "@/lib/utils";
-import {
-  useSocketGetters,
-  useSocketSetters,
-} from "@/providers/socket-provider";
+import { useSocketSetters } from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
+import { List, useDynamicRowHeight } from "react-window";
+import IndividualChat from "./individual-chat";
 
 function ChatHistoryBox({
   // scrollContainer,
@@ -27,8 +26,11 @@ function ChatHistoryBox({
   } = useInfiniteChats();
 
   const { setMessages } = useSocketSetters();
-  const { scrollToLatest } = useSocketGetters();
+  // const { scrollToLatest } = useSocketGetters();
   // const {username} = useProtected()
+  const dynamicHeight = useDynamicRowHeight({
+    defaultRowHeight: 20,
+  });
 
   // const elementToWatchForRefetch = useRef<HTMLDivElement | null>(null);
   const elementToWatchForRefetchCallback = useCallback(
@@ -60,10 +62,10 @@ function ChatHistoryBox({
     );
   }, [chats]);
 
-  useEffect(() => {
-    scrollToLatest.current = true;
-    setMessages((prev) => [...prev]);
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   scrollToLatest.current = true;
+  //   setMessages((prev) => [...prev]);
+  // }, [isSuccess]);
 
   // useEffect(() => {}, [chats]);
 
@@ -94,23 +96,26 @@ function ChatHistoryBox({
         </p>
       )}
 
-      {[...chats.pages].reverse().map((page) =>
+      <List
+        className="col-span-full grid grid-cols-1"
+        rowComponent={IndividualChat}
+        rowProps={{
+          chats: [],
+          username,
+        }}
+        rowCount={chats.pages[0].pagination.total}
+        rowHeight={20}
+      />
+
+      {/* {[...chats.pages].reverse().map((page) =>
         page.data.map((chat) => (
-          <div
+          <IndividualChat
             key={`${chat.id}-${chat.createdAt}`}
-            className={cn(
-              "px-2 py-1 rounded-lg",
-              chat.sender === username
-                ? "bg-blue-800 text-gray-100 col-start-2 col-end-7"
-                : "border border-muted-foreground col-start-1 col-end-6"
-            )}
-            title={dateParse(chat.createdAt)}
-          >
-            <p className="font-semibold truncate">{chat.sender}:</p>
-            <p className="text-sm">{chat.message}</p>
-          </div>
+            chat={chat}
+            username={username}
+          />
         ))
-      )}
+      )} */}
 
       <TemporaryHistory />
     </>
