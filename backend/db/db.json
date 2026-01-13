@@ -1,5 +1,11 @@
 {
-  "users": ["Alice", "Bob", "Charlie", "Diana", "Eve"],
+  "users": [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Diana",
+    "Eve"
+  ],
   "chats": [
     {
       "id": "6a7d3d5a-8e6a-4d89-bb3f-3c9f8c1e1c01",
@@ -316,7 +322,6 @@
       "createdAt": 1735720980000,
       "status": "sent"
     },
-
     {
       "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0021",
       "sender": "Charlie",
@@ -387,7 +392,6 @@
       "createdAt": 1735721580000,
       "status": "sent"
     },
-
     {
       "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0031",
       "sender": "Alice",
@@ -458,7 +462,6 @@
       "createdAt": 1735722180000,
       "status": "sent"
     },
-
     {
       "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0041",
       "sender": "Bob",
