@@ -10,11 +10,12 @@ interface IChat {
 }
 
 interface IData {
-  users: Set<string>;
+  users: string[];
   chats: IChat[];
 }
 
-const defaultData: IData = { users: new Set(), chats: [] };
+// avoid using set and map, use array and object ({}) instead
+const defaultData: IData = { users: [], chats: [] };
 
 export const db = await JSONFilePreset(
   path.join(import.meta.dirname, "../db/db.json"),
