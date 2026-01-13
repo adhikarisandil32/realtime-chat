@@ -27,7 +27,11 @@ const updateUserCount = async () => {
 io.on("connection", (socket) => {
   console.log(`[connected] SocketID: ${socket.id}`);
 
-  socket.on("connected-user", (data: { user: string }) => {
+  socket.on("connected-user", async (data: { user: string }) => {
+    await db.update(({ users }) =>
+      users.includes(data.user) ? null : users.push(data.user),
+    );
+
     if (Array.from(activeUsers.values()).includes(data.user)) {
       updateUserCount();
       return;
