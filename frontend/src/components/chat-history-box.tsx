@@ -1,18 +1,18 @@
 import { useInfiniteChats } from "@/services/api/chats";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useLayoutEffect } from "react";
 import Loading from "./loading-animation";
-import { dateParse } from "@/utils/date-parse";
-import { cn } from "@/lib/utils";
-import { useSocketSetters } from "@/providers/socket-provider";
+import {
+  useSocketGetters,
+  useSocketSetters,
+} from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
-import { List, useDynamicRowHeight } from "react-window";
 import IndividualChat from "./individual-chat";
 
 function ChatHistoryBox({
-  // scrollContainer,
+  // chatsContainer,
   username,
 }: {
-  // scrollContainer: React.RefObject<HTMLDivElement | null>;
+  // chatsContainer: React.RefObject<HTMLDivElement | null>;
   username: string;
 }) {
   const {
@@ -26,13 +26,27 @@ function ChatHistoryBox({
   } = useInfiniteChats();
 
   const { setMessages } = useSocketSetters();
-  // const { scrollToLatest } = useSocketGetters();
-  // const {username} = useProtected()
-  const dynamicHeight = useDynamicRowHeight({
-    defaultRowHeight: 20,
-  });
+  const {
+    scrollToLatest,
+    chatsScrollContainerElem,
+    chatsScrollElemPrevMeasurements,
+  } = useSocketGetters();
 
-  // const elementToWatchForRefetch = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    if (!chatsScrollContainerElem.current) return;
+
+    if (!chatsScrollElemPrevMeasurements.current) {
+      chatsScrollContainerElem.current.scrollTop =
+        chatsScrollContainerElem.current.scrollHeight;
+    } else {
+      const prevScrollHeight =
+        chatsScrollElemPrevMeasurements.current.scrollHeight;
+
+      chatsScrollContainerElem.current.scrollTop =
+        chatsScrollContainerElem.current.scrollHeight - prevScrollHeight;
+    }
+  }, [chats]);
+
   const elementToWatchForRefetchCallback = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) return;
@@ -44,6 +58,7 @@ function ChatHistoryBox({
           }
         },
         {
+          root: chatsScrollContainerElem.current,
           threshold: 0,
         }
       );
@@ -57,17 +72,22 @@ function ChatHistoryBox({
   );
 
   useEffect(() => {
+    scrollToLatest.current = false;
     setMessages((prev) =>
       prev.filter((message) => message.status === "pending")
     );
+
+    return () => {
+      if (!chatsScrollContainerElem.current) return;
+
+      const measurements = {
+        scrollHeight: chatsScrollContainerElem.current.scrollHeight,
+        scrollTop: chatsScrollContainerElem.current.scrollTop,
+      };
+
+      chatsScrollElemPrevMeasurements.current = measurements;
+    };
   }, [chats]);
-
-  // useEffect(() => {
-  //   scrollToLatest.current = true;
-  //   setMessages((prev) => [...prev]);
-  // }, [isSuccess]);
-
-  // useEffect(() => {}, [chats]);
 
   if (isPending) {
     return <Loading />;
@@ -96,18 +116,18 @@ function ChatHistoryBox({
         </p>
       )}
 
-      <List
+      {/* <List
         className="col-span-full grid grid-cols-1"
         rowComponent={IndividualChat}
         rowProps={{
-          chats: [],
+          chats: chats.pages.map((page) => page.data.map((chat) => chat)),
           username,
         }}
         rowCount={chats.pages[0].pagination.total}
-        rowHeight={20}
-      />
+        rowHeight={dynamicHeight}
+      /> */}
 
-      {/* {[...chats.pages].reverse().map((page) =>
+      {[...chats.pages].reverse().map((page) =>
         page.data.map((chat) => (
           <IndividualChat
             key={`${chat.id}-${chat.createdAt}`}
@@ -115,7 +135,7 @@ function ChatHistoryBox({
             username={username}
           />
         ))
-      )} */}
+      )}
 
       <TemporaryHistory />
     </>
