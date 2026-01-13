@@ -1,13 +1,20 @@
 import { useInfiniteChats } from "@/services/api/chats";
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useLayoutEffect } from "react";
 import Loading from "./loading-animation";
-import { dateParse } from "@/utils/date-parse";
-import { cn } from "@/lib/utils";
-import { useSocket } from "@/providers/socket-provider";
+import {
+  useSocketGetters,
+  useSocketSetters,
+} from "@/providers/socket-provider";
 import TemporaryHistory from "./temporary-chat-history";
-import { useIntersectionObserver } from "usehooks-ts";
+import IndividualChat from "./individual-chat";
 
-function ChatHistoryBox({ username }: { username: string }) {
+function ChatHistoryBox({
+  // chatsContainer,
+  username,
+}: {
+  // chatsContainer: React.RefObject<HTMLDivElement | null>;
+  username: string;
+}) {
   const {
     data: chats,
     isPending,
@@ -18,23 +25,69 @@ function ChatHistoryBox({ username }: { username: string }) {
     fetchNextPage,
   } = useInfiniteChats();
 
-  const { setMessages } = useSocket();
-  const { isIntersecting, ref: firstConversationRef } = useIntersectionObserver(
-    { threshold: 0 }
+  const { setMessages } = useSocketSetters();
+  const {
+    scrollToLatest,
+    chatsScrollContainerElem,
+    chatsScrollElemPrevMeasurements,
+  } = useSocketGetters();
+
+  useLayoutEffect(() => {
+    if (!chatsScrollContainerElem.current) return;
+
+    if (!chatsScrollElemPrevMeasurements.current) {
+      chatsScrollContainerElem.current.scrollTop =
+        chatsScrollContainerElem.current.scrollHeight;
+    } else {
+      const prevScrollHeight =
+        chatsScrollElemPrevMeasurements.current.scrollHeight;
+
+      chatsScrollContainerElem.current.scrollTop =
+        chatsScrollContainerElem.current.scrollHeight - prevScrollHeight;
+    }
+  }, [chats]);
+
+  const elementToWatchForRefetchCallback = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasNextPage) {
+            fetchNextPage();
+          }
+        },
+        {
+          root: chatsScrollContainerElem.current,
+          threshold: 0,
+        }
+      );
+      observer.observe(node);
+
+      return () => {
+        observer.disconnect();
+      };
+    },
+    [hasNextPage]
   );
 
   useEffect(() => {
+    scrollToLatest.current = false;
     setMessages((prev) =>
       prev.filter((message) => message.status === "pending")
     );
-  }, [chats]);
 
-  useEffect(() => {
-    if (isIntersecting) {
-      fetchNextPage();
-    }
-  }, [isIntersecting, fetchNextPage]);
-  // console.log({ isIntersecting });
+    return () => {
+      if (!chatsScrollContainerElem.current) return;
+
+      const measurements = {
+        scrollHeight: chatsScrollContainerElem.current.scrollHeight,
+        scrollTop: chatsScrollContainerElem.current.scrollTop,
+      };
+
+      chatsScrollElemPrevMeasurements.current = measurements;
+    };
+  }, [chats]);
 
   if (isPending) {
     return <Loading />;
@@ -50,6 +103,11 @@ function ChatHistoryBox({ username }: { username: string }) {
 
   return (
     <>
+      <div
+        ref={elementToWatchForRefetchCallback}
+        className="col-span-full"
+      />
+
       {isFetchingNextPage ? (
         <Loading />
       ) : hasNextPage ? null : (
@@ -58,26 +116,24 @@ function ChatHistoryBox({ username }: { username: string }) {
         </p>
       )}
 
-      {[...chats.pages].reverse().map((page, pageIdx) =>
-        page.data.map((chat, chatIdx) => (
-          <div
+      {/* <List
+        className="col-span-full grid grid-cols-1"
+        rowComponent={IndividualChat}
+        rowProps={{
+          chats: chats.pages.map((page) => page.data.map((chat) => chat)),
+          username,
+        }}
+        rowCount={chats.pages[0].pagination.total}
+        rowHeight={dynamicHeight}
+      /> */}
+
+      {[...chats.pages].reverse().map((page) =>
+        page.data.map((chat) => (
+          <IndividualChat
             key={`${chat.id}-${chat.createdAt}`}
-            className={cn(
-              "px-2 py-1 rounded-lg",
-              chat.sender === username
-                ? "bg-blue-800 text-gray-100 col-start-2 col-end-7"
-                : "border border-muted-foreground col-start-1 col-end-6"
-            )}
-            title={dateParse(chat.createdAt)}
-            ref={(elem) => {
-              if (chatIdx === 0 && pageIdx === 0) {
-                firstConversationRef(elem);
-              }
-            }}
-          >
-            <p className="font-semibold truncate">{chat.sender}: </p>
-            <p>{chat.message}</p>
-          </div>
+            chat={chat}
+            username={username}
+          />
         ))
       )}
 

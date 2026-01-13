@@ -14,6 +14,7 @@ const io = new Server(server, {
 });
 
 const activeUsers = new Map();
+const activelyTypingUsers = new Set();
 
 const updateUserCount = async () => {
   // const users = await io.fetchSockets();
@@ -26,7 +27,11 @@ const updateUserCount = async () => {
 io.on("connection", (socket) => {
   console.log(`[connected] SocketID: ${socket.id}`);
 
-  socket.on("connected-user", (data: { user: string }) => {
+  socket.on("connected-user", async (data: { user: string }) => {
+    await db.update(({ users }) =>
+      users.includes(data.user) ? null : users.push(data.user),
+    );
+
     if (Array.from(activeUsers.values()).includes(data.user)) {
       updateUserCount();
       return;
@@ -63,11 +68,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("typing-on", (data: { user: string }) => {
-    socket.broadcast.emit("typing-on", data.user);
+    if (activelyTypingUsers.has(data.user)) return;
+    activelyTypingUsers.add(data.user);
+    socket.broadcast.emit("typing-on", Array.from(activelyTypingUsers));
   });
 
   socket.on("typing-off", (data: { user: string }) => {
-    socket.broadcast.emit("typing-off", data.user);
+    activelyTypingUsers.delete(data.user);
+    socket.broadcast.emit("typing-off", Array.from(activelyTypingUsers));
   });
 });
 

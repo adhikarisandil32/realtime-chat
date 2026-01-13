@@ -1,5 +1,11 @@
 {
-  "users": ["Alice", "Bob", "Charlie", "Diana", "Eve"],
+  "users": [
+    "Alice",
+    "Bob",
+    "Charlie",
+    "Diana",
+    "Eve"
+  ],
   "chats": [
     {
       "id": "6a7d3d5a-8e6a-4d89-bb3f-3c9f8c1e1c01",
@@ -174,6 +180,356 @@
       "sender": "Alice",
       "message": "Deploying",
       "createdAt": 1735719840000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0001",
+      "sender": "Alice",
+      "message": "Deploying",
+      "createdAt": 1735719840000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0002",
+      "sender": "Bob",
+      "message": "Build started",
+      "createdAt": 1735719900000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0003",
+      "sender": "Charlie",
+      "message": "CI pipeline running",
+      "createdAt": 1735719960000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0004",
+      "sender": "Alice",
+      "message": "Unit tests passing",
+      "createdAt": 1735720020000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0005",
+      "sender": "Bob",
+      "message": "Lint checks complete",
+      "createdAt": 1735720080000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0006",
+      "sender": "Charlie",
+      "message": "Docker image building",
+      "createdAt": 1735720140000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0007",
+      "sender": "Alice",
+      "message": "Image pushed to registry",
+      "createdAt": 1735720200000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0008",
+      "sender": "Bob",
+      "message": "Starting rollout",
+      "createdAt": 1735720260000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0009",
+      "sender": "Charlie",
+      "message": "Kubernetes updating pods",
+      "createdAt": 1735720320000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0010",
+      "sender": "Alice",
+      "message": "Health checks running",
+      "createdAt": 1735720380000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0011",
+      "sender": "Bob",
+      "message": "Service responding",
+      "createdAt": 1735720440000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0012",
+      "sender": "Charlie",
+      "message": "No errors so far",
+      "createdAt": 1735720500000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0013",
+      "sender": "Alice",
+      "message": "Monitoring logs",
+      "createdAt": 1735720560000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0014",
+      "sender": "Bob",
+      "message": "CPU usage normal",
+      "createdAt": 1735720620000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0015",
+      "sender": "Charlie",
+      "message": "Memory stable",
+      "createdAt": 1735720680000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0016",
+      "sender": "Alice",
+      "message": "Traffic gradually increasing",
+      "createdAt": 1735720740000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0017",
+      "sender": "Bob",
+      "message": "No alerts triggered",
+      "createdAt": 1735720800000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0018",
+      "sender": "Charlie",
+      "message": "Latency within limits",
+      "createdAt": 1735720860000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0019",
+      "sender": "Alice",
+      "message": "Rolling update complete",
+      "createdAt": 1735720920000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0020",
+      "sender": "Bob",
+      "message": "All pods healthy",
+      "createdAt": 1735720980000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0021",
+      "sender": "Charlie",
+      "message": "Checking database",
+      "createdAt": 1735721040000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0022",
+      "sender": "Alice",
+      "message": "DB migrations done",
+      "createdAt": 1735721100000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0023",
+      "sender": "Bob",
+      "message": "Connections stable",
+      "createdAt": 1735721160000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0024",
+      "sender": "Charlie",
+      "message": "Cache warming up",
+      "createdAt": 1735721220000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0025",
+      "sender": "Alice",
+      "message": "Background jobs running",
+      "createdAt": 1735721280000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0026",
+      "sender": "Bob",
+      "message": "Queue length normal",
+      "createdAt": 1735721340000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0027",
+      "sender": "Charlie",
+      "message": "No retries observed",
+      "createdAt": 1735721400000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0028",
+      "sender": "Alice",
+      "message": "Verifying endpoints",
+      "createdAt": 1735721460000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0029",
+      "sender": "Bob",
+      "message": "API responses OK",
+      "createdAt": 1735721520000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0030",
+      "sender": "Charlie",
+      "message": "Auth working fine",
+      "createdAt": 1735721580000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0031",
+      "sender": "Alice",
+      "message": "Load testing started",
+      "createdAt": 1735721640000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0032",
+      "sender": "Bob",
+      "message": "Throughput acceptable",
+      "createdAt": 1735721700000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0033",
+      "sender": "Charlie",
+      "message": "Error rate zero",
+      "createdAt": 1735721760000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0034",
+      "sender": "Alice",
+      "message": "Scaling verified",
+      "createdAt": 1735721820000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0035",
+      "sender": "Bob",
+      "message": "Autoscaler working",
+      "createdAt": 1735721880000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0036",
+      "sender": "Charlie",
+      "message": "Metrics look good",
+      "createdAt": 1735721940000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0037",
+      "sender": "Alice",
+      "message": "Final verification",
+      "createdAt": 1735722000000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0038",
+      "sender": "Bob",
+      "message": "No issues detected",
+      "createdAt": 1735722060000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0039",
+      "sender": "Charlie",
+      "message": "Ready to announce",
+      "createdAt": 1735722120000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0040",
+      "sender": "Alice",
+      "message": "Deployment successful",
+      "createdAt": 1735722180000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0041",
+      "sender": "Bob",
+      "message": "Great work team",
+      "createdAt": 1735722240000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0042",
+      "sender": "Charlie",
+      "message": "Monitoring continues",
+      "createdAt": 1735722300000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0043",
+      "sender": "Alice",
+      "message": "Post-deploy checks",
+      "createdAt": 1735722360000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0044",
+      "sender": "Bob",
+      "message": "All green",
+      "createdAt": 1735722420000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0045",
+      "sender": "Charlie",
+      "message": "Closing incident",
+      "createdAt": 1735722480000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0046",
+      "sender": "Alice",
+      "message": "Notifying stakeholders",
+      "createdAt": 1735722540000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0047",
+      "sender": "Bob",
+      "message": "Release notes sent",
+      "createdAt": 1735722600000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0048",
+      "sender": "Charlie",
+      "message": "System stable",
+      "createdAt": 1735722660000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0049",
+      "sender": "Alice",
+      "message": "Wrapping up",
+      "createdAt": 1735722720000,
+      "status": "sent"
+    },
+    {
+      "id": "a1c2a9e7-5d4b-4a8c-b1f0-3d6e2a9c0050",
+      "sender": "Bob",
+      "message": "Deployment closed",
+      "createdAt": 1735722780000,
       "status": "sent"
     }
   ]

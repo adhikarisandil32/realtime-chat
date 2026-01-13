@@ -1,21 +1,21 @@
 import { cn } from "@/lib/utils";
 import { useProtected } from "@/providers/protected";
-import { useSocket } from "@/providers/socket-provider";
+import { useSocketGetters } from "@/providers/socket-provider";
 import { dateParse } from "@/utils/date-parse";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 
 function TemporaryHistory() {
   const { username } = useProtected();
-  const { messages } = useSocket();
-
-  const elemRef = useRef<HTMLDivElement | null>(null);
+  const { emptyMessageElement, scrollToLatest } = useSocketGetters();
+  const { messages } = useSocketGetters();
 
   useEffect(() => {
-    // console.log("temporary-chat-mounted");
-    elemRef.current?.scrollIntoView({
+    if (!emptyMessageElement.current || !scrollToLatest.current) return;
+    emptyMessageElement.current.scrollIntoView({
       behavior: "smooth",
       block: "end",
     });
+    scrollToLatest.current = false;
   }, [messages]);
 
   return (
@@ -36,7 +36,11 @@ function TemporaryHistory() {
           <p>{chat.message}</p>
         </div>
       ))}
-      <div ref={elemRef} />
+
+      <div
+        ref={emptyMessageElement}
+        className="col-span-full"
+      />
     </>
   );
 }

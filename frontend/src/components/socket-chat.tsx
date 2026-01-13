@@ -1,5 +1,8 @@
-import { useSocket } from "@/providers/socket-provider";
-import { useRef, type FormEvent } from "react";
+import {
+  useSocketGetters,
+  useSocketSetters,
+} from "@/providers/socket-provider";
+import React, { useRef, type FormEvent } from "react";
 import ClientCount from "./client-counts";
 import ChatHistoryBox from "./chat-history-box";
 import { useProtected } from "../providers/protected";
@@ -8,16 +11,20 @@ import TypingIndicator from "./typing-indictor";
 import OnlineUsersList from "./online-users-list";
 
 function SocketChat() {
-  // React.useEffect(() => {
-  //   console.log("socket chat mounted");
-
-  //   return () => console.log("socket chat unmounted");
-  // });
-
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
 
-  const { socket, emitMessage, setMessages } = useSocket();
+  const { emitMessage, setMessages } = useSocketSetters();
+  const { socket, scrollToLatest, chatsScrollContainerElem } =
+    useSocketGetters();
   const { username, logout } = useProtected();
+
+  React.useEffect(() => {
+    console.log("SocketChat mounted");
+
+    return () => {
+      console.log("SocketChat unmounted");
+    };
+  });
 
   const handleSend = (e: FormEvent) => {
     e.preventDefault();
@@ -27,14 +34,16 @@ function SocketChat() {
     const messageData: IClientChat = {
       sender: username,
       message,
-      createdAt: new Date().getTime(),
+      createdAt: Date.now(),
       status: "pending",
       identifier: crypto.randomUUID(),
     };
-    emitMessage(messageData);
-    setMessages((prev) => [...prev, messageData]);
-
     inputMessageRef.current.value = "";
+
+    emitMessage(messageData);
+
+    scrollToLatest.current = true;
+    setMessages((prev) => [...prev, messageData]);
   };
 
   const handleTyping = () => {
@@ -61,13 +70,16 @@ function SocketChat() {
     <div className="flex h-screen justify-center items-center">
       <div className="flex gap-4 items-start">
         <div className="space-y-4 w-96 relative">
-          <div className="border-2 border-black h-125 overflow-auto w-full">
-            <div className="sticky top-0 bg-gray-100">
+          <div
+            className="border-2 border-black overflow-y-auto h-125 w-full"
+            ref={chatsScrollContainerElem}
+          >
+            <div className="sticky top-0 z-10 bg-gray-100">
               <h2 className="text-center font-bold">Conversation Box</h2>
               <TypingIndicator className="py-1 text-sm text-muted-foreground text-center" />
             </div>
 
-            <div className="my-1 px-2 space-y-1 grid grid-cols-6">
+            <div className="my-1 px-2 space-y-1 grid grid-cols-6 relative">
               <ChatHistoryBox username={username} />
             </div>
           </div>
