@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { io, type Socket } from "socket.io-client";
 // import { socket } from "@/services/socket/socket";
 import { envConfig } from "@/config/config";
@@ -23,6 +17,11 @@ interface ISocketGettersProviderContext {
   messages: IClientChat[];
   scrollToLatest: React.RefObject<boolean>;
   emptyMessageElement: React.RefObject<HTMLDivElement | null>;
+  chatsScrollContainerElem: React.RefObject<HTMLDivElement | null>;
+  chatsScrollElemPrevMeasurements: React.RefObject<Record<
+    string,
+    number
+  > | null>;
 }
 
 const SocketSettersContext = React.createContext<
@@ -59,6 +58,10 @@ export default function SocketProvider({
 }) {
   const scrollToLatest = useRef(false);
   const emptyMessageElement = useRef<HTMLDivElement | null>(null);
+  const chatsScrollContainerElem = useRef<HTMLDivElement | null>(null);
+  const chatsScrollElemPrevMeasurements = useRef<Record<string, number> | null>(
+    null
+  );
 
   const { username } = useProtected();
   const [usersCount, setUsersCount] = useState(0);
@@ -71,7 +74,21 @@ export default function SocketProvider({
 
   useEffect(() => {
     const countListener = (count: number) => setUsersCount(count);
-    const messageHandler = (messageData: IClientChat) =>
+    const messageHandler = (messageData: IClientChat) => {
+      if (chatsScrollContainerElem.current) {
+        const clientHeight = chatsScrollContainerElem.current.clientHeight;
+        const scrollTop = chatsScrollContainerElem.current.scrollTop;
+        const scrollHeight = chatsScrollContainerElem.current.scrollHeight;
+
+        // 25 clearence
+        if (clientHeight + scrollTop >= scrollHeight - 25) {
+          scrollToLatest.current = true;
+        } else {
+          scrollToLatest.current = false;
+        }
+      } else {
+        scrollToLatest.current = true;
+      }
       setMessages((prev) => {
         const strictlyPreviousMessages = prev.filter(
           (prevMessage) => prevMessage.identifier !== messageData.identifier
@@ -79,6 +96,7 @@ export default function SocketProvider({
 
         return [...strictlyPreviousMessages, messageData];
       });
+    };
 
     socket.connect();
     if (username) {
@@ -108,6 +126,8 @@ export default function SocketProvider({
     messages,
     scrollToLatest,
     emptyMessageElement,
+    chatsScrollContainerElem,
+    chatsScrollElemPrevMeasurements,
   };
 
   return (
