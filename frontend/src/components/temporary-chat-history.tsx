@@ -6,18 +6,16 @@ import React, { useEffect } from "react";
 
 function TemporaryHistory() {
   const { username } = useProtected();
-  const { scrollToLatest, emptyMessageElement } = useSocketGetters();
+  const { emptyMessageElement, scrollToLatest } = useSocketGetters();
   const { messages } = useSocketGetters();
 
   useEffect(() => {
-    // is the state of messages has changed and scrollToLatest is set to true, only then the it is scrolled to latest message
-    if (scrollToLatest.current) {
-      emptyMessageElement.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-      scrollToLatest.current = false;
-    }
+    if (!emptyMessageElement.current || !scrollToLatest.current) return;
+    emptyMessageElement.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
+    scrollToLatest.current = false;
   }, [messages]);
 
   return (
