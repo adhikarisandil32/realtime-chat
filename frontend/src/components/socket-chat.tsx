@@ -18,13 +18,13 @@ function SocketChat() {
     useSocketGetters();
   const { username, logout } = useProtected();
 
-  React.useEffect(() => {
-    console.log("SocketChat mounted");
+  // React.useEffect(() => {
+  //   console.log("SocketChat mounted");
 
-    return () => {
-      console.log("SocketChat unmounted");
-    };
-  });
+  //   return () => {
+  //     console.log("SocketChat unmounted");
+  //   };
+  // });
 
   const handleSend = (e: FormEvent) => {
     e.preventDefault();
