@@ -1,22 +1,14 @@
 import { cn } from "@/lib/utils";
 import { IChatResponse } from "@/types/chat-response";
 import { dateParse } from "@/utils/date-parse";
-import { RowComponentProps } from "react-window";
 
 export default function IndividualChat({
-  index,
-  chats,
+  chat,
   username,
-}: RowComponentProps<{
-  chats: IChatResponse[];
+}: {
+  chat: IChatResponse;
   username: string;
-}>) {
-  const chat = chats[index];
-
-  if (!chat) {
-    return null;
-  }
-
+}) {
   return (
     <div
       className={cn(
