@@ -14,7 +14,8 @@ function SocketChat() {
   const inputMessageRef = useRef<HTMLInputElement | null>(null);
 
   const { emitMessage, setMessages } = useSocketSetters();
-  const { socket, scrollToLatest } = useSocketGetters();
+  const { socket, scrollToLatest, chatsScrollContainerElem } =
+    useSocketGetters();
   const { username, logout } = useProtected();
 
   React.useEffect(() => {
@@ -33,14 +34,15 @@ function SocketChat() {
     const messageData: IClientChat = {
       sender: username,
       message,
-      createdAt: new Date().getTime(),
+      createdAt: Date.now(),
       status: "pending",
       identifier: crypto.randomUUID(),
     };
     inputMessageRef.current.value = "";
-    scrollToLatest.current = true;
 
     emitMessage(messageData);
+
+    scrollToLatest.current = true;
     setMessages((prev) => [...prev, messageData]);
   };
 
@@ -70,9 +72,7 @@ function SocketChat() {
         <div className="space-y-4 w-96 relative">
           <div
             className="border-2 border-black overflow-y-auto h-125 w-full"
-            style={{
-              overflowAnchor: "auto",
-            }}
+            ref={chatsScrollContainerElem}
           >
             <div className="sticky top-0 z-10 bg-gray-100">
               <h2 className="text-center font-bold">Conversation Box</h2>
