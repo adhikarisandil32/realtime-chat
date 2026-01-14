@@ -68,7 +68,7 @@ function SocketChat() {
 
   return (
     <div className="flex h-screen justify-center items-center">
-      <div className="flex gap-4 items-start">
+      <div className="flex flex-col-reverse md:flex-row gap-4 items-start">
         <div className="space-y-4 w-96 relative">
           <div
             className="border-2 border-black overflow-y-auto h-125 w-full"
@@ -117,7 +117,7 @@ function SocketChat() {
           </form>
         </div>
 
-        <div className="overflow-auto max-h-125 w-63 border-2 border-black">
+        <div className="overflow-auto max-h-125 md:w-63 w-full border-2 border-black">
           <h2 className="font-bold text-center bg-gray-100 top-0 sticky">
             Online Users <ClientCount />
           </h2>
